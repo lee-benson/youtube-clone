@@ -4,7 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "ts-node src/index.ts",
+    "build": "tsc",
+    "serve": "node/dist/index.js"
+  },
+  "scriptsComments": {
+    "start": "For local development, run ts code without compiling into js",
+    "build": "For deployment, actually compiles the code",
+    "serve": "Js files built are put into the dist directory"
   },
   "keywords": [],
   "author": "",
