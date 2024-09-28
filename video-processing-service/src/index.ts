@@ -3,6 +3,7 @@ import ffmpeg from "fluent-ffmpeg";
 
 
 const app = express();
+app.use(express.json()); // Middleware to handle the json requests
 
 app.post("/process-video", (req, res) => {
   // Need to get the input video file from the request
@@ -16,7 +17,7 @@ app.post("/process-video", (req, res) => {
   }
 
   ffmpeg(inputFilePath)
-    .outputOptions("-vf", "scale=-1:360") // 360p
+    .outputOptions("-vf", "scale=trunc(iw/2)*2:360") // 360p (Scale has to be divisible by 2)
     .on("end", () => {
       res.status(200).send("Processing finished successfully.")
     })
