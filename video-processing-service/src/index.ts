@@ -16,16 +16,6 @@ app.post("/process-video", (req, res) => {
     res.status(400).send("Bad Request: Missing file path.");
   }
 
-  ffmpeg(inputFilePath)
-    .outputOptions("-vf", "scale=trunc(iw/2)*2:360") // 360p (Scale has to be divisible by 2)
-    .on("end", () => {
-      res.status(200).send("Processing finished successfully.")
-    })
-    .on("error", (err) => {
-      console.log(`An error occurred: ${err.message}`);
-      res.status(500).send(`Internal server error: ${err.message}`);
-    })
-    .save(outputFilePath);
 });
 
 
