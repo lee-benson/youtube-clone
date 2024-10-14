@@ -23,8 +23,7 @@ export function setUpDirectories() {
  * @param rawVideoName - The name of the file to convert from {@link localRawVideoPath}.
  * @param processedVideoName - The name of the file to convert to {@link localProcessedVideoPath}.
  * @returns - A promise that resolves when the video is converted.
-*/
-
+ */
 export function convertVideo(rawVideoName: string, processedVideoName: string) {
   return new Promise<void>((resolve, reject) => {
     ffmpeg(`${localRawVideoPath}/${rawVideoName}`)
@@ -39,4 +38,19 @@ export function convertVideo(rawVideoName: string, processedVideoName: string) {
       })
       .save(`${localProcessedVideoPath}/${processedVideoName}`);
   });
+}
+
+/**
+ * @param fileName - Name of file to be downloaded from the
+ * {@link rawVideoBucketName} bucket into the {@link localRawVideoPath} folder.
+ * @returns A promise that resolves when the file has been downloaded.
+ */
+export async function downloadRawVideo(fileName: string) {
+  await storage.bucket(rawVideoBucketName)
+    .file(fileName)
+    .download({ destination: `${localRawVideoPath}/${fileName}` });
+
+  console.log(
+    `gs://${rawVideoBucketName}/${fileName} downloaded to ${localRawVideoPath}/${fileName}.`
+  )
 }
