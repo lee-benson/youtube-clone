@@ -54,3 +54,20 @@ export async function downloadRawVideo(fileName: string) {
     `gs://${rawVideoBucketName}/${fileName} downloaded to ${localRawVideoPath}/${fileName}.`
   )
 }
+
+/**
+ * @param fileName - The name of the file to be uploaded from the 
+ * {@link localProcessedVideoPath} folder into the {@link processedVideoBucketName}.
+ *  @returns A promise that resolves when the file has been uploaded.
+ * */
+export async function uploadProcessedVideo(fileName: string) {
+  const bucket = storage.bucket(processedVideoBucketName);
+
+  await bucket.upload(`${localProcessedVideoPath}/${fileName}`), {
+    destination: fileName
+  };
+  console.log(
+    `${localProcessedVideoPath}/${fileName} uploaeded to gs://${processedVideoBucketName}/${fileName}`
+  );
+  await bucket.file(fileName).makePublic();
+}
