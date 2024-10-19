@@ -1,5 +1,5 @@
 import { Storage } from "@google-cloud/storage";
-import fs from "fs";
+import fs, { existsSync } from "fs";
 import ffmpeg from "fluent-ffmpeg";
 import { log } from "console";
 
@@ -18,6 +18,8 @@ const localProcessedVideoPath = "./processed-videos";
 /* Creates the local directories for the raw and processed videos */
 
 export function setUpDirectories() {
+  ensureDirectoryExistence(localRawVideoPath);
+  ensureDirectoryExistence(localProcessedVideoPath);
 }
 
 /** 
@@ -50,7 +52,6 @@ export async function downloadRawVideo(fileName: string) {
   await storage.bucket(rawVideoBucketName)
     .file(fileName)
     .download({ destination: `${localRawVideoPath}/${fileName}` });
-
   console.log(
     `gs://${rawVideoBucketName}/${fileName} downloaded to ${localRawVideoPath}/${fileName}.`
   )
@@ -63,7 +64,6 @@ export async function downloadRawVideo(fileName: string) {
  * */
 export async function uploadProcessedVideo(fileName: string) {
   const bucket = storage.bucket(processedVideoBucketName);
-
   await bucket.upload(`${localProcessedVideoPath}/${fileName}`), {
     destination: fileName
   };
@@ -114,3 +114,15 @@ function deleteFile(filePath: string): Promise<void> {
     }
   });
 }
+
+/**
+ * Ensures a directory exists, creating it if necessary.
+ * @param {string} dirPath - The directory path being checked.
+ *  */
+function ensureDirectoryExistence(dirPath: string) {
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath, { recursive: true });
+    console.log(`Directory created at ${dirPath}`);
+  }
+}
+
