@@ -17,7 +17,7 @@ const localProcessedVideoPath = "./processed-videos";
 
 /* Creates the local directories for the raw and processed videos */
 
-export function setUpDirectories() {
+export function setupDirectories() {
   ensureDirectoryExistence(localRawVideoPath);
   ensureDirectoryExistence(localProcessedVideoPath);
 }
